@@ -1,0 +1,23 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0px 0px 0px 0px;
+    overflow: hidden;
+}
+
+#bootstrap-controls {
+    position: absolute;
+    display: flex;
+    z-index: 99999;
+    width: 50%;
+    margin-top: 1rem;
+    left: 20rem;
+    justify-content: space-evenly;
+}
+
+#gui {
+    position: absolute;
+    top: 0rem;
+    left: 80%;
+}
