@@ -296,6 +296,65 @@ class Hexagram extends Mesh {
     }
 }
 
+class TripleTriangle extends Mesh {
+    constructor() {
+        super();
+
+        // Quad
+        let vertices = [
+            -1,   -1, 0, //0
+            -1,    0, 0, //1
+            -1,    1, 0, //2
+             0, -0.5, 0, //3
+             0,  0.5, 0, //4
+             1,    0, 0, //5
+
+        ];
+        let indices = [
+            // Figura 2d original
+            0,1,3,
+            1,2,4,
+            3,4,5,
+        ];
+
+
+        let vi = to3d(0.3, vertices, indices);
+
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vi[0], 3));
+        this.geometry.setIndex(vi[1]);
+        this.material = new THREE.MeshBasicMaterial({color: "red", wireframe: false, side: THREE.DoubleSide});
+    }
+}
+
+class Trapezoid extends Mesh {
+    constructor() {
+        super();
+
+        // Quad
+        let vertices = [
+            -1,   -0.5, 0, //0
+             1,   -0.5, 0, //1
+            -0.4,  1, 0, //2
+             0.4,  1, 0, //3
+
+        ];
+        let indices = [
+            // Figura 2d original
+            0,3,1,
+            2,4,3,
+        ];
+
+
+        let vi = to3d(0.3, vertices, indices);
+
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vi[0], 3));
+        this.geometry.setIndex(vi[1]);
+        this.material = new THREE.MeshBasicMaterial({color: "blue", wireframe: false, side: THREE.DoubleSide});
+    }
+}
+
 function to3d(width, vertices, indices) {
     let v = [].concat(vertices);
     let i = [].concat(indices);
@@ -335,4 +394,4 @@ function to3d(width, vertices, indices) {
     return [v, i];
 }
 
-export {Quad, Sword, Triangle3d, House, LetterF, Shield, Saphire, Pentacle, Hexagram}
+export {Quad, Sword, Triangle3d, House, LetterF, Shield, Saphire, Pentacle, Hexagram, TripleTriangle, Trapezoid}

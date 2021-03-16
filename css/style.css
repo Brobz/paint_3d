@@ -6,18 +6,29 @@ html, body {
     overflow: hidden;
 }
 
-#bootstrap-controls {
-    position: absolute;
-    display: flex;
-    z-index: 99999;
-    width: 50%;
-    margin-top: 1rem;
-    left: 20rem;
-    justify-content: space-evenly;
-}
-
 #gui {
     position: absolute;
     top: 0rem;
     left: 80%;
+}
+.leftMenu {
+    top: 1%;
+    left: 1%;
+    width: 20%;
+    max-height: 80%;
+}
+.rightMenu {
+    top: 1%;
+    right: 1%;
+    width: 20%;
+    max-height: 80%;
+}
+.objButton{
+    color: black;
+    background-color: aliceblue;
+    border-radius: 0%;
+    
+}
+.objButton:hover{
+    background-color: lightblue;
 }

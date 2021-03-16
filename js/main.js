@@ -2,10 +2,11 @@ import * as THREE from '/build/three.module.js';
 import {OrbitControls} from '/js/jsm/controls/OrbitControls.js';
 import Stats from '/js/jsm/libs/stats.module.js';
 import dat from '/js/jsm/libs/dat.gui.module.js';
+import * as customs from '/js/jsm/libs/mesh.module.js';
 
 "using strict";
 
-let renderer, scene, camera, cameraControl, mesh, stats, floorPlane;
+let renderer, scene, camera, cameraControl, mesh, stats, floorPlane, insertMenuToggle;
 let globalWireframe = false;
 let visibleFloor = false;
 let statsPanel = true;
@@ -30,25 +31,38 @@ function addMesh(shape) {
     let geometry, material;
 
     switch(shape) {
-        case 'Cube':
-            geometry = new THREE.BoxGeometry();
-            material = new THREE.MeshBasicMaterial({color: "white", wireframe: globalWireframe});
-            mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "Cube";
+        case 'Sword':
+            mesh = new customs.Sword();
             break;
-        case 'Sphere':
-            geometry = new THREE.SphereGeometry();
-            material = new THREE.MeshBasicMaterial({color: "white", wireframe: globalWireframe});
-            mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "Sphere";
+        case 'Triangle3d':
+            mesh = new customs.Triangle3d();
             break;
-        case 'Cone':
-            geometry = new THREE.ConeGeometry();
-            material = new THREE.MeshBasicMaterial({color: "white", wireframe: globalWireframe});
-            mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "Cone";
+        case 'House':
+            mesh = new customs.House();
+            break;
+        case 'LetterF':
+            mesh = new customs.LetterF();
+            break;
+        case 'Shield':
+            mesh = new customs.Shield();
+            break;
+        case 'Saphire':
+            mesh = new customs.Saphire();
+            break;
+        case 'Pentacle':
+            mesh = new customs.Pentacle();
+            break;
+        case 'Hexagram':
+            mesh = new customs.Hexagram();
+            break;
+        case 'TripleTriangle':
+            mesh = new customs.TripleTriangle();
+            break;
+        case 'Trapezoid':
+            mesh = new customs.Trapezoid();
             break;
     }
+    mesh.name = shape;
     scene.add(mesh);
     meshArr.push(mesh);
 }
@@ -79,7 +93,7 @@ function init() {
     floorPlane.rotation.x = 90 * Math.PI / 180;
     floorPlane.name = "floorPlane";
 
-    addMesh('Cube');
+    addMesh('Sword');
 
     // General menu
     let globalMenu = gui.addFolder("Global Menu");
@@ -148,14 +162,7 @@ function init() {
 
     let statsToggle = globalMenu.add(model, "statsPanel").name("Toggle Stats Panel").listen().onChange(function(value) {
         statsPanel = value;
-        if(statsPanel){
-          stats = new Stats();
-          stats.id = 'stats';
-          stats.showPanel(0);
-          document.body.appendChild(stats.dom);
-        }else{
-          document.body.removeChild(stats.dom);
-        }
+        stats.dom.style.display = statsPanel ? "" : "none";
     });
 
     let sliderPosX = posMenu.add(model, "posX").min(-5).max(5).step(0.5).name("X").listen().onChange(function(value) {
@@ -209,6 +216,8 @@ function init() {
     stats.id = 'stats';
     stats.showPanel(0);
     document.body.appendChild(stats.dom);
+    stats.dom.style.top = '1%';
+    stats.dom.style.left = '22%';
 
     // OBJECT SELECT
 
@@ -240,24 +249,24 @@ function init() {
         }
     }
 
-    // BOOTSTRAP BUTTONS
-    let addCubeBtn = document.getElementById("insert-cube");
-    let addSphereBtn = document.getElementById("insert-sphere");
-    let addConeBtn = document.getElementById("insert-cone");
-
-    addCubeBtn.addEventListener('click', function(event) {
-        event.preventDefault();
-        addMesh('Cube');
+    // Insert Objects Menu
+    let insertMenu = document.getElementById("objMenu");
+    let toggleMenu = document.getElementById("toggleMenu");
+    
+    insertMenu.childNodes.forEach((element) => {
+        if(element.innerHTML){
+            element.addEventListener('click', (event) => {
+                event.preventDefault();
+                addMesh(element.innerHTML);
+            });
+        }
     });
 
-    addSphereBtn.addEventListener('click', function(event) {
-        event.preventDefault();
-        addMesh('Sphere');
-    });
-
-    addConeBtn.addEventListener('click', function(event) {
-        event.preventDefault();
-        addMesh('Cone');
+    insertMenuToggle = true;
+    toggleMenu.addEventListener("click", () => {
+        insertMenuToggle = !insertMenuToggle;
+        insertMenu.style.display = insertMenuToggle ? '' : 'none';
+        toggleMenu.innerHTML = insertMenuToggle ? 'Hide' : 'Show';
     });
 
     // RENDER LOOP
