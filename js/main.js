@@ -5,7 +5,9 @@ import dat from '/js/jsm/libs/dat.gui.module.js';
 
 "using strict";
 
-let renderer, scene, camera, cameraControl, mesh, stats;
+let renderer, scene, camera, cameraControl, mesh, stats, floorPlane;
+let globalWireframe = false;
+let visibleFloor = false;
 let meshArr = [];
 
 let gui = new dat.GUI();
@@ -29,19 +31,19 @@ function addMesh(shape) {
     switch(shape) {
         case 'Cube':
             geometry = new THREE.BoxGeometry();
-            material = new THREE.MeshBasicMaterial({color: "white", wireframe: true});
+            material = new THREE.MeshBasicMaterial({color: "white", wireframe: globalWireframe});
             mesh = new THREE.Mesh(geometry, material);
             mesh.name = "Cube";
             break;
         case 'Sphere':
             geometry = new THREE.SphereGeometry();
-            material = new THREE.MeshBasicMaterial({color: "white", wireframe: true});
+            material = new THREE.MeshBasicMaterial({color: "white", wireframe: globalWireframe});
             mesh = new THREE.Mesh(geometry, material);
             mesh.name = "Sphere";
             break;
         case 'Cone':
             geometry = new THREE.ConeGeometry();
-            material = new THREE.MeshBasicMaterial({color: "white", wireframe: true});
+            material = new THREE.MeshBasicMaterial({color: "white", wireframe: globalWireframe});
             mesh = new THREE.Mesh(geometry, material);
             mesh.name = "Cone";
             break;
@@ -67,19 +69,28 @@ function init() {
     let near = 0.1;
     let far = 10000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 0, 3);
+    camera.position.set(0, 1, 3);
     cameraControl = new OrbitControls(camera, renderer.domElement);
+
+
+    // FLOOR PLANE
+    floorPlane = new THREE.Mesh( new THREE.PlaneGeometry( 10000, 10000, 10, 10 ), new THREE.MeshBasicMaterial({color: "white", wireframe: globalWireframe, side: THREE.DoubleSide}) );
+    floorPlane.rotation.x = 90 * Math.PI / 180;
+    floorPlane.name = "floorPlane";
 
     addMesh('Cube');
 
     // General menu
-    let generalMenu = gui.addFolder("General Menu");
+    let globalMenu = gui.addFolder("Global Menu");
 
-    generalMenu.open();
+    globalMenu.open();
 
     let model = {
         name: mesh.name,
+        bgColor: [0, 0, 0],
         wireframe: mesh.material.wireframe,
+        globalWireframe: globalWireframe,
+        visibleFloor: visibleFloor,
         rotY: mesh.rotation.y * 180 / Math.PI,
         rotX: mesh.rotation.x * 180 / Math.PI,
         rotZ: mesh.rotation.z * 180 / Math.PI,
@@ -105,11 +116,32 @@ function init() {
         colorPalette: [255, 255, 255]
     }
 
-    // TextField Model Name
-    let tfMeshName = generalMenu.add(model, "name").name("Model's Name").listen().onChange(function(value) {
-        mesh.name = value;
-    }).onFinishChange(function(value) {
-        console.log(mesh.name);
+    // Global Controls
+    let globalWireFrame = globalMenu.add(model, "globalWireframe").name("Global Wireframe").listen().onChange(function(value) {
+      globalWireframe = value;
+      floorPlane.material.wireframe = value;
+        meshArr.forEach((item, i) => {
+          item.material.wireframe = value;
+        });
+
+    });
+
+    let bgColor = globalMenu.addColor(model, "bgColor").name("Background Color").listen().onChange(function(value) {
+          renderer.setClearColor(new THREE.Color(value[0] / 255, value[1] / 255, value[2] / 255));
+    });
+
+    let floorToggle = globalMenu.add(model, "visibleFloor").name("Toggle Floor Plane").listen().onChange(function(value) {
+          visibleFloor = value;
+          if(!visibleFloor) {
+            if (meshArr.indexOf(floorPlane) > -1) {
+              meshArr.splice(meshArr.indexOf(floorPlane), 1);
+              scene.remove( scene.getObjectByName("floorPlane"));
+            }
+
+          }else {
+            scene.add(floorPlane);
+            meshArr.push(floorPlane);
+          }
     });
 
     let sliderPosX = posMenu.add(model, "posX").min(-5).max(5).step(0.5).name("X").listen().onChange(function(value) {
@@ -177,7 +209,7 @@ function init() {
         raycaster.setFromCamera( mouse3D, camera );
         var intersects = raycaster.intersectObjects( meshArr );
 
-        if ( intersects.length > 0 ) {
+        if ( intersects.length > 0  && intersects[0].object.name != "floorPlane") {
             let color = Math.random() * 0xffffff;
             intersects[ 0 ].object.material.color.setHex( color );
             mesh = intersects[0].object;
