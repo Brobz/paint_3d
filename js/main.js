@@ -74,7 +74,7 @@ function init() {
 
     // General menu
     let generalMenu = gui.addFolder("General Menu");
-    
+
     generalMenu.open();
 
     let model = {
@@ -127,7 +127,7 @@ function init() {
     // Button Position Home
     let btnPosHome = posMenu.add(model, "posHome").name("HOME");
 
-   
+
     // Model Orientation
     let sliderRotY = rotMenu.add(model, "rotY").min(-180).max(180).step(5).name("Y (deg)").listen().onChange(function(value) {
         mesh.rotation.y = value * Math.PI / 180;
@@ -168,11 +168,11 @@ function init() {
 
     document.addEventListener( 'click', onDocumentMouseDown );
 
-    function onDocumentMouseDown( event ) {  
+    function onDocumentMouseDown( event ) {
         event.preventDefault();
-        var mouse3D = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1,   
-                                -( event.clientY / window.innerHeight ) * 2 + 1,  
-                                0.5 );     
+        var mouse3D = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1,
+                                -( event.clientY / window.innerHeight ) * 2 + 1,
+                                0.5 );
         let raycaster = new THREE.Raycaster();
         raycaster.setFromCamera( mouse3D, camera );
         var intersects = raycaster.intersectObjects( meshArr );
@@ -228,7 +228,7 @@ function renderLoop() {
 }
 
 function updateScene() {
-    
+
 }
 
 // EVENT LISTENERS & HANDLERS

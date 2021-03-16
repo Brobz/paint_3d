@@ -161,6 +161,141 @@ class House extends Mesh {
     }
 }
 
+class Shield extends Mesh {
+    constructor() {
+        super();
+
+        // Quad
+        let vertices = [
+               0,  -0.7, 0, //0
+            0.5, 0.7,  0, //1
+            0,    0.7,      0, //2
+            0.5, 1.5,   0, //3
+            0,  1.5,   0, //4
+            0.5,    0.7,      0, //5
+            -0.5,    1.5,      0, //6
+            -0.5,    0.7,      0, //7
+        ];
+        let indices = [
+            // Figura 2d original
+            0,1,2,
+            2,3,4, 2,3,5,
+            5,6,7, 0,2,7,
+            4,6,2,
+        ];
+
+        let vi = to3d(0.5, vertices, indices);
+
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vi[0], 3));
+        this.geometry.setIndex(vi[1]);
+        this.material = new THREE.MeshBasicMaterial({color: "yellow", wireframe: false, side: THREE.DoubleSide});
+    }
+}
+
+class Saphire extends Mesh {
+    constructor() {
+        super();
+
+        // Quad
+        let vertices = [
+               0,  -0.5, 0, //0
+               0.5,   0.5,  0, //1
+               0,   0.5,  0, //2
+               0.5, -0.5, 0, //3
+               0.25, 0.75, 0, //4
+               0.25, -0.75, 0, //5
+              -0.25, 0, 0, //6
+              0.75, 0, 0, //7
+        ];
+        let indices = [
+            // Figura 2d original
+            0,1,2, 0,3,1,
+            1,2,4,
+            0,3,5,
+            0,2,6,
+            1,3,7,
+        ];
+
+        let vi = to3d(0.5, vertices, indices);
+
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vi[0], 3));
+        this.geometry.setIndex(vi[1]);
+        this.material = new THREE.MeshBasicMaterial({color: "blue", wireframe: false, side: THREE.DoubleSide});
+    }
+}
+
+
+class Pentacle extends Mesh {
+    constructor() {
+        super();
+
+        // Quad
+        let vertices = [
+               -0.5, 0.3, 0, //0
+               -0.2, 0.3, 0, //1
+                0,   0.7, 0, //2
+               0.2,  0.3, 0, //3
+               0.5, 0.3, 0, //4
+               0.3, -0.2, 0, //5
+               0.35, -0.6, 0, //6
+               0, -0.4, 0, //7
+               -0.35, -0.6, 0, //8
+               -0.3, -0.2, 0, //5
+        ];
+        let indices = [
+            // Figura 2d original
+            0,1,9,
+            1,2,3,
+            3,4,5,
+            5,6,7,
+            7,8,9,
+            9,5,7,
+            9,1,5,
+            1,3,5,
+        ];
+
+
+        let vi = to3d(0.5, vertices, indices);
+
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vi[0], 3));
+        this.geometry.setIndex(vi[1]);
+        this.material = new THREE.MeshBasicMaterial({color: "purple", wireframe: false, side: THREE.DoubleSide});
+    }
+}
+
+class Hexagram extends Mesh {
+    constructor() {
+        super();
+
+        // Quad
+        let vertices = [
+               -1, 0.5, 0, //0
+               0, 1, 0, //1
+                1,  0.5, 0, //2
+               1,  -0.5, 0, //3
+               0, -1, 0, //4
+               -1, -0.5, 0, //5
+
+        ];
+        let indices = [
+            // Figura 2d original
+            0,2,4,
+            5,1,3,
+        ];
+
+
+        let vi = to3d(0.3, vertices, indices);
+
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vi[0], 3));
+        this.geometry.setIndex(vi[1]);
+        this.material = new THREE.MeshBasicMaterial({color: "gold", wireframe: false, side: THREE.DoubleSide});
+    }
+}
+
 function to3d(width, vertices, indices) {
     let v = [].concat(vertices);
     let i = [].concat(indices);
@@ -200,4 +335,4 @@ function to3d(width, vertices, indices) {
     return [v, i];
 }
 
-export {Quad, Sword, Triangle3d, House, LetterF}
+export {Quad, Sword, Triangle3d, House, LetterF, Shield, Saphire, Pentacle, Hexagram}
