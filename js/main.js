@@ -8,6 +8,7 @@ import dat from '/js/jsm/libs/dat.gui.module.js';
 let renderer, scene, camera, cameraControl, mesh, stats, floorPlane;
 let globalWireframe = false;
 let visibleFloor = false;
+let statsPanel = true;
 let meshArr = [];
 
 let gui = new dat.GUI();
@@ -91,6 +92,7 @@ function init() {
         wireframe: mesh.material.wireframe,
         globalWireframe: globalWireframe,
         visibleFloor: visibleFloor,
+        statsPanel:  statsPanel,
         rotY: mesh.rotation.y * 180 / Math.PI,
         rotX: mesh.rotation.x * 180 / Math.PI,
         rotZ: mesh.rotation.z * 180 / Math.PI,
@@ -142,6 +144,18 @@ function init() {
             scene.add(floorPlane);
             meshArr.push(floorPlane);
           }
+    });
+
+    let statsToggle = globalMenu.add(model, "statsPanel").name("Toggle Stats Panel").listen().onChange(function(value) {
+        statsPanel = value;
+        if(statsPanel){
+          stats = new Stats();
+          stats.id = 'stats';
+          stats.showPanel(0);
+          document.body.appendChild(stats.dom);
+        }else{
+          document.body.removeChild(stats.dom);
+        }
     });
 
     let sliderPosX = posMenu.add(model, "posX").min(-5).max(5).step(0.5).name("X").listen().onChange(function(value) {
